@@ -1,0 +1,744 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sillara — Theme support</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,400;0,500;1,400&family=Jost:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Nocturne — Sillara's flagship dark scheme (docs/07-design-tokens.md) */
+    --bg: #0A0D0C;
+    --surface: #15211B;
+    --chrome: #050706;
+    --text: #F4EFE6;
+    --note: #D9C7B8;
+    --muted: rgba(244, 239, 230, 0.56);
+    --faint: rgba(244, 239, 230, 0.4);
+    --accent: #C2A062;
+    --accent-2: #2E5446;
+    --btn-ink: #0A0D0C;
+    --hair: rgba(194, 160, 98, 0.24);
+    --hair-strong: rgba(194, 160, 98, 0.42);
+    --danger: #C98A6A;
+    --hero: radial-gradient(130% 90% at 72% 12%, #16241E 0%, #0A0D0C 58%);
+    --serif: "Cormorant", Georgia, "Times New Roman", serif;
+    --sans: "Jost", -apple-system, "Segoe UI", Roboto, sans-serif;
+    --radius: 4px;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    min-height: 100vh;
+    background: var(--bg);
+    background-image: var(--hero);
+    background-attachment: fixed;
+    color: var(--text);
+    font: 400 16px/1.65 var(--sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: 40rem;
+    margin: 0 auto;
+    padding: clamp(48px, 9vw, 92px) clamp(20px, 5vw, 32px) 72px;
+  }
+
+  /* ── Masthead ─────────────────────────────────────── */
+  .brand {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 1.1rem;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: var(--accent);
+    padding-left: 0.34em;
+  }
+  .rule {
+    width: 40px;
+    height: 1px;
+    background: var(--hair-strong);
+    margin: 22px 0;
+  }
+  h1 {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: clamp(2.4rem, 6vw, 3.4rem);
+    line-height: 1.03;
+    letter-spacing: 0.005em;
+    margin-bottom: 18px;
+  }
+  .intro {
+    color: var(--note);
+    font-size: 1.0625rem;
+    max-width: 34ch;
+    margin-bottom: 24px;
+  }
+  .policy {
+    font-size: 0.75rem;
+    line-height: 1.9;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 40px;
+  }
+  .policy .dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    margin-right: 12px;
+    vertical-align: middle;
+  }
+  .policy b { color: var(--note); font-weight: 500; }
+
+  /* ── Feedback banners ─────────────────────────────── */
+  .banner {
+    display: none;
+    padding: 16px 20px;
+    border-radius: var(--radius);
+    margin-bottom: 24px;
+    font-size: 0.9375rem;
+  }
+  .banner--ok {
+    background: rgba(46, 84, 70, 0.35);
+    border: 1px solid var(--accent-2);
+    color: var(--note);
+  }
+  .banner--err {
+    background: rgba(201, 138, 106, 0.12);
+    border: 1px solid rgba(201, 138, 106, 0.5);
+    color: var(--danger);
+  }
+  .banner a { color: var(--accent); }
+
+  /* ── Form card ────────────────────────────────────── */
+  form {
+    position: relative;
+    display: grid;
+    gap: 22px;
+    background: linear-gradient(180deg, rgba(21, 33, 27, 0.7), rgba(10, 13, 12, 0.5));
+    border: 1px solid var(--hair);
+    border-radius: var(--radius);
+    padding: clamp(24px, 5vw, 44px);
+  }
+  /* editorial inset hairline, echoing the theme's media frames */
+  form::before {
+    content: "";
+    position: absolute;
+    inset: 10px;
+    border: 1px solid rgba(194, 160, 98, 0.1);
+    border-radius: 2px;
+    pointer-events: none;
+  }
+  .field { display: grid; gap: 9px; position: relative; }
+  .row-2 { display: grid; gap: 22px; }
+  @media (min-width: 560px) {
+    .row-2 { grid-template-columns: 1fr 1fr; }
+  }
+  label {
+    font: 500 0.6875rem/1.3 var(--sans);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .req { color: var(--accent); margin-left: 2px; }
+
+  input, textarea, select {
+    width: 100%;
+    padding: 13px 15px;
+    border: 1px solid var(--hair);
+    border-radius: var(--radius);
+    background: rgba(10, 13, 12, 0.4);
+    color: var(--text);
+    font: 400 1rem var(--sans);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  input::placeholder, textarea::placeholder { color: var(--faint); }
+  input:focus-visible, textarea:focus-visible, select:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px var(--accent);
+  }
+  textarea { resize: vertical; min-height: 9.5rem; line-height: 1.6; }
+
+  /* ── Custom select — themed combobox layered over the native <select>,
+     mirroring assets/custom-select.js + critical.css used by the collection
+     page's sort/filter dropdowns. The real <select> stays in the DOM
+     (visually hidden) for form submission + no-JS fallback. ────────────── */
+  custom-select {
+    position: relative;
+    display: block;
+  }
+  custom-select .cs__native {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    border: 0;
+  }
+  .cs__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    padding: 13px 15px;
+    border: 1px solid var(--hair);
+    border-radius: var(--radius);
+    background: rgba(10, 13, 12, 0.4);
+    color: var(--text);
+    font: 400 1rem var(--sans);
+    text-align: start;
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .cs__button:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px var(--accent);
+  }
+  .cs__chevron {
+    flex: 0 0 auto;
+    width: 0.65em;
+    height: 0.65em;
+    background-color: var(--accent);
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M6 9l6 6 6-6'/%3E%3C/svg%3E") center / contain no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M6 9l6 6 6-6'/%3E%3C/svg%3E") center / contain no-repeat;
+    transition: transform 0.2s ease;
+  }
+  custom-select.is-open .cs__chevron { transform: rotate(180deg); }
+  .cs__list {
+    position: absolute;
+    z-index: 20;
+    inset-inline: 0;
+    top: calc(100% + 6px);
+    max-height: 18rem;
+    overflow-y: auto;
+    padding: 6px;
+    list-style: none;
+    background: var(--surface);
+    border: 1px solid var(--hair);
+    border-radius: var(--radius);
+    box-shadow: 0 12px 32px -16px rgba(0, 0, 0, 0.6);
+  }
+  .cs__option {
+    padding: 10px 12px;
+    border-radius: 3px;
+    color: var(--text);
+    font-size: 0.9375rem;
+    cursor: pointer;
+  }
+  .cs__option[aria-selected='true'] { color: var(--accent); }
+  .cs__option.is-active,
+  .cs__option:not([aria-disabled='true']):hover {
+    background: var(--hair);
+  }
+  .cs__option[aria-disabled='true'] {
+    color: var(--faint);
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cs__chevron { transition: none; }
+  }
+
+  /* Native file input, retailored to the brand's ghost-button language */
+  input[type="file"] {
+    padding: 10px 12px;
+    font: 400 0.9375rem var(--sans);
+    color: var(--muted);
+    cursor: pointer;
+  }
+  input[type="file"]::file-selector-button {
+    font: 500 0.6875rem/1 var(--sans);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 10px 18px;
+    margin-inline-end: 14px;
+    border: 1px solid var(--hair-strong);
+    border-radius: 3px;
+    background: transparent;
+    color: var(--accent);
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+  input[type="file"]::file-selector-button:hover {
+    background: var(--accent);
+    color: var(--btn-ink);
+  }
+  .hint {
+    font-size: 0.8125rem;
+    color: var(--faint);
+    line-height: 1.5;
+  }
+
+  /* ── File dropzone ────────────────────────────────── */
+  .dropzone {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 10px;
+    padding: 36px 20px;
+    border: 1px dashed var(--hair-strong);
+    border-radius: var(--radius);
+    background: rgba(10, 13, 12, 0.25);
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+  .dropzone-input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+  }
+  .dropzone:focus-within,
+  .dropzone.is-dragover {
+    border-style: solid;
+    border-color: var(--accent);
+    background: rgba(194, 160, 98, 0.08);
+  }
+  .dropzone.has-file {
+    border-style: solid;
+    border-color: var(--accent-2);
+  }
+  .dropzone-icon {
+    display: flex;
+    color: var(--accent);
+  }
+  .dropzone-icon svg { display: block; }
+  .dropzone-text {
+    font-size: 0.9375rem;
+    color: var(--note);
+  }
+  .dropzone-text .browse {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .dropzone-hint {
+    font-size: 0.8125rem;
+    color: var(--faint);
+    line-height: 1.5;
+    max-width: 32ch;
+  }
+
+  button[type="submit"] {
+    justify-self: start;
+    margin-top: 6px;
+    padding: 15px 40px;
+    border: 1px solid var(--accent);
+    border-radius: var(--radius);
+    background: var(--accent);
+    color: var(--btn-ink);
+    font: 500 0.8125rem var(--sans);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+  }
+  button[type="submit"]:hover {
+    background: var(--accent-2);
+    border-color: var(--accent-2);
+    color: var(--text);
+  }
+  button[type="submit"]:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  .footer-note {
+    margin-top: 36px;
+    font-size: 0.8125rem;
+    line-height: 1.7;
+    color: var(--faint);
+  }
+  .footer-note a { color: var(--accent); }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <p class="brand">Sillara</p>
+    <div class="rule" aria-hidden="true"></div>
+    <h1>Theme support</h1>
+    <p class="intro">Having trouble with the Sillara theme? Tell us what's happening and we'll help you set it right.</p>
+    <p class="policy"><span class="dot" aria-hidden="true"></span>Every request answered within <b>2 business days</b></p>
+
+    <div class="banner banner--ok" id="formSuccess" role="status">
+      Thank you — your message has been received. We'll be in touch within two business days.
+    </div>
+    <div class="banner banner--err" id="formError" role="alert">
+      Something went wrong sending your message. Please try again, or email us directly at
+      <a href="mailto:support@yourdomain.com">support@yourdomain.com</a>.
+    </div>
+
+    <!--
+      SETUP — read before publishing:
+      1. This form posts to Formspree (https://formspree.io) — the simplest zero-backend
+         option: free tier, no server needed, built-in auto-responder + spam filtering.
+         Sign up, create a form, and replace YOUR_FORM_ID below with the real endpoint id.
+         Turn on Formspree's "autoresponse" feature and paste in the 2-business-day-reply
+         copy so submitters get an immediate acknowledgement (the "Auto-responder function"
+         Shopify's Theme Store review checks for).
+      2. Alternatives to Formspree: a simple serverless function (Vercel/Netlify) that emails
+         you, or a help-desk widget (Help Scout, Zendesk) embedded instead of this raw form.
+      3. Host this file wherever your theme's marketing/support site lives (NOT inside the
+         Shopify theme itself — this is a standalone page, unrelated to the storefront).
+         Point `theme_support_url` in config/settings_schema.json at wherever you host it.
+      4. Swap "support@yourdomain.com" above for your real support email.
+      5. The <select> below currently only lists "Sillara" — update if you ever sell more
+         than one theme, per Shopify's requirement to ask which theme when there's more than one.
+    -->
+    <form action="https://formspree.io/f/mojokovk" method="POST" id="supportForm">
+      <div class="field">
+        <label for="name">Name <span class="req" aria-hidden="true">*</span></label>
+        <input type="text" id="name" name="name" autocomplete="name" required>
+      </div>
+
+      <div class="row-2">
+        <div class="field">
+          <label for="email">Email address <span class="req" aria-hidden="true">*</span></label>
+          <input type="email" id="email" name="email" autocomplete="email" required>
+        </div>
+        <div class="field">
+          <label for="store_url">Store URL <span class="req" aria-hidden="true">*</span></label>
+          <input type="text" id="store_url" name="store_url" placeholder="yourstore.myshopify.com" required>
+        </div>
+      </div>
+
+      <div class="row-2">
+        <div class="field">
+          <label for="theme_name">Theme</label>
+          <custom-select>
+            <select id="theme_name" name="theme_name">
+              <option value="Sillara" selected>Sillara</option>
+            </select>
+          </custom-select>
+        </div>
+        <div class="field">
+          <label for="subject">Subject</label>
+          <input type="text" id="subject" name="_subject" placeholder="Brief summary">
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="description">Describe the problem <span class="req" aria-hidden="true">*</span></label>
+        <textarea id="description" name="description" required placeholder="What happened? What did you expect instead? Steps to reproduce help us most."></textarea>
+      </div>
+
+      <div class="field">
+        <label for="attachment">Attach a screenshot (optional)</label>
+        <div class="dropzone" id="dropzone">
+          <input type="file" id="attachment" name="attachment" accept="image/*" class="dropzone-input">
+          <span class="dropzone-icon" aria-hidden="true">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 15.5V4M12 4l-4 4M12 4l4 4"/>
+              <path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/>
+            </svg>
+          </span>
+          <p class="dropzone-text" id="dropzoneText">Drag and drop a screenshot, or <span class="browse">browse</span></p>
+          <p class="dropzone-hint">A screenshot of the issue — or the page it's on — speeds up troubleshooting.</p>
+        </div>
+      </div>
+
+      <button type="submit">Send message</button>
+    </form>
+
+    <p class="footer-note">
+      For general questions about your Shopify store (not this theme specifically), contact
+      <a href="https://help.shopify.com">Shopify Support</a> instead.
+    </p>
+  </div>
+
+  <script>
+    // <custom-select> — same component as assets/custom-select.js in the theme, used here so the
+    // "Theme" dropdown matches the collection page's sort/filter selects. The real <select> stays
+    // in the DOM (form submit, no-JS fallback); a themed combobox/listbox layers on top.
+    (function () {
+      if (customElements.get('custom-select')) return;
+      var uid = 0;
+
+      customElements.define(
+        'custom-select',
+        class CustomSelect extends HTMLElement {
+          connectedCallback() {
+            this.select = this.querySelector('select');
+            if (!this.select || this.dataset.enhanced) return;
+
+            var id = 'cs-' + ++uid;
+            this.opts = [];
+
+            this.button = document.createElement('button');
+            this.button.type = 'button';
+            this.button.className = 'cs__button';
+            this.button.setAttribute('role', 'combobox');
+            this.button.setAttribute('aria-haspopup', 'listbox');
+            this.button.setAttribute('aria-expanded', 'false');
+            this.button.setAttribute('aria-controls', id + '-list');
+            var label = this.select.labels && this.select.labels[0];
+            this.valueEl = document.createElement('span');
+            this.valueEl.className = 'cs__value';
+            this.valueEl.id = id + '-val';
+            if (label) {
+              if (!label.id) label.id = id + '-label';
+              this.button.setAttribute('aria-labelledby', label.id + ' ' + this.valueEl.id);
+            }
+            this.button.appendChild(this.valueEl);
+            var chev = document.createElement('span');
+            chev.className = 'cs__chevron';
+            chev.setAttribute('aria-hidden', 'true');
+            this.button.appendChild(chev);
+
+            this.list = document.createElement('ul');
+            this.list.className = 'cs__list';
+            this.list.id = id + '-list';
+            this.list.setAttribute('role', 'listbox');
+            this.list.hidden = true;
+            Array.prototype.forEach.call(this.select.options, function (opt, i) {
+              var li = document.createElement('li');
+              li.className = 'cs__option';
+              li.id = id + '-o' + i;
+              li.setAttribute('role', 'option');
+              li.dataset.value = opt.value;
+              li.textContent = opt.textContent;
+              li.setAttribute('aria-selected', opt.selected ? 'true' : 'false');
+              if (opt.disabled) {
+                li.dataset.disabled = 'true';
+                li.setAttribute('aria-disabled', 'true');
+              }
+              this.list.appendChild(li);
+              this.opts.push(li);
+            }, this);
+
+            this.select.classList.add('cs__native');
+            this.select.setAttribute('tabindex', '-1');
+            this.select.setAttribute('aria-hidden', 'true');
+
+            this.appendChild(this.button);
+            this.appendChild(this.list);
+            this.activeIndex = Math.max(0, this.select.selectedIndex);
+            this._syncValue();
+
+            this.button.addEventListener('click', this.toggle.bind(this));
+            this.button.addEventListener('keydown', this._onKey.bind(this));
+            this.list.addEventListener('mousedown', function (e) { e.preventDefault(); });
+            this.list.addEventListener('click', (function (e) {
+              var li = e.target.closest('.cs__option');
+              if (li && !li.dataset.disabled) this._choose(this.opts.indexOf(li));
+            }).bind(this));
+            this._onDocClick = (function (e) {
+              if (!this.contains(e.target)) this.close();
+            }).bind(this);
+            this.select.addEventListener('change', (function () {
+              if (!this._internal) this._syncValue();
+            }).bind(this));
+
+            this.dataset.enhanced = 'true';
+          }
+
+          _syncValue() {
+            var i = this.select.selectedIndex;
+            var opt = this.select.options[i];
+            this.valueEl.textContent = opt ? opt.textContent : '';
+            this.opts.forEach(function (li, n) {
+              li.setAttribute('aria-selected', n === i ? 'true' : 'false');
+            });
+          }
+
+          open() {
+            if (this.classList.contains('is-open')) return;
+            this.classList.add('is-open');
+            this.list.hidden = false;
+            this.button.setAttribute('aria-expanded', 'true');
+            document.addEventListener('click', this._onDocClick);
+            this._setActive(this.select.selectedIndex < 0 ? 0 : this.select.selectedIndex);
+          }
+
+          close() {
+            if (!this.classList.contains('is-open')) return;
+            this.classList.remove('is-open');
+            this.list.hidden = true;
+            this.button.setAttribute('aria-expanded', 'false');
+            this.button.removeAttribute('aria-activedescendant');
+            document.removeEventListener('click', this._onDocClick);
+          }
+
+          toggle() {
+            this.classList.contains('is-open') ? this.close() : this.open();
+          }
+
+          _setActive(i) {
+            var n = this.opts.length;
+            if (!n) return;
+            i = (i + n) % n;
+            this.opts.forEach(function (li) { li.classList.remove('is-active'); });
+            var li = this.opts[i];
+            li.classList.add('is-active');
+            this.activeIndex = i;
+            this.button.setAttribute('aria-activedescendant', li.id);
+            li.scrollIntoView({ block: 'nearest' });
+          }
+
+          _move(dir) {
+            var i = this.activeIndex;
+            for (var s = 0; s < this.opts.length; s++) {
+              i = (i + dir + this.opts.length) % this.opts.length;
+              if (!this.opts[i].dataset.disabled) return this._setActive(i);
+            }
+          }
+
+          _choose(i) {
+            var li = this.opts[i];
+            if (!li || li.dataset.disabled) return;
+            this.select.selectedIndex = i;
+            this._internal = true;
+            this.select.dispatchEvent(new Event('change', { bubbles: true }));
+            this._internal = false;
+            this._syncValue();
+            this.close();
+            this.button.focus();
+          }
+
+          _onKey(e) {
+            var open = this.classList.contains('is-open');
+            switch (e.key) {
+              case 'ArrowDown':
+                e.preventDefault();
+                open ? this._move(1) : this.open();
+                break;
+              case 'ArrowUp':
+                e.preventDefault();
+                open ? this._move(-1) : this.open();
+                break;
+              case 'Home':
+                if (open) {
+                  e.preventDefault();
+                  this._setActive(0);
+                  if (this.opts[this.activeIndex].dataset.disabled) this._move(1);
+                }
+                break;
+              case 'End':
+                if (open) {
+                  e.preventDefault();
+                  this._setActive(this.opts.length - 1);
+                  if (this.opts[this.activeIndex].dataset.disabled) this._move(-1);
+                }
+                break;
+              case 'Enter':
+              case ' ':
+                e.preventDefault();
+                open ? this._choose(this.activeIndex) : this.open();
+                break;
+              case 'Escape':
+                if (open) {
+                  e.preventDefault();
+                  this.close();
+                }
+                break;
+              case 'Tab':
+                this.close();
+                break;
+              default:
+                if (e.key.length === 1 && open) this._typeahead(e.key.toLowerCase());
+            }
+          }
+
+          _typeahead(ch) {
+            var n = this.opts.length;
+            for (var k = 1; k <= n; k++) {
+              var idx = (this.activeIndex + k) % n;
+              var li = this.opts[idx];
+              if (!li.dataset.disabled && li.textContent.trim().toLowerCase().indexOf(ch) === 0) {
+                return this._setActive(idx);
+              }
+            }
+          }
+        }
+      );
+    })();
+  </script>
+
+  <script>
+    // Progressive enhancement only: intercepts submit to show inline success/error instead of a
+    // full-page redirect, IF Formspree's endpoint is configured. Works fine as a plain HTML POST
+    // (full page reload to Formspree's default thank-you page) even with JS disabled.
+    var form = document.getElementById('supportForm');
+    form.addEventListener('submit', function (e) {
+      if (form.action.indexOf('YOUR_FORM_ID') !== -1) return; // not configured yet — let it 404 naturally in dev
+      e.preventDefault();
+      var data = new FormData(form);
+      fetch(form.action, {
+        method: 'POST',
+        body: data,
+        headers: { Accept: 'application/json' },
+      })
+        .then(function (res) {
+          if (res.ok) {
+            document.getElementById('formSuccess').style.display = 'block';
+            document.getElementById('formError').style.display = 'none';
+            form.reset();
+            form.style.display = 'none';
+          } else {
+            document.getElementById('formError').style.display = 'block';
+          }
+        })
+        .catch(function () {
+          document.getElementById('formError').style.display = 'block';
+        });
+    });
+
+    // File dropzone: click-anywhere-to-browse (native, via the input covering the box) +
+    // drag-and-drop, with the filename swapped in once a file is chosen either way.
+    (function () {
+      var dropzone = document.getElementById('dropzone');
+      var input = document.getElementById('attachment');
+      var text = document.getElementById('dropzoneText');
+      var defaultText = text.innerHTML;
+
+      function showFile(file) {
+        if (file) {
+          text.textContent = file.name;
+          dropzone.classList.add('has-file');
+        } else {
+          text.innerHTML = defaultText;
+          dropzone.classList.remove('has-file');
+        }
+      }
+
+      input.addEventListener('change', function () {
+        showFile(input.files && input.files[0]);
+      });
+
+      ['dragenter', 'dragover'].forEach(function (evt) {
+        dropzone.addEventListener(evt, function (e) {
+          e.preventDefault();
+          dropzone.classList.add('is-dragover');
+        });
+      });
+      ['dragleave', 'dragend'].forEach(function (evt) {
+        dropzone.addEventListener(evt, function (e) {
+          e.preventDefault();
+          dropzone.classList.remove('is-dragover');
+        });
+      });
+      dropzone.addEventListener('drop', function (e) {
+        e.preventDefault();
+        dropzone.classList.remove('is-dragover');
+        var files = e.dataTransfer.files;
+        if (files && files.length) {
+          input.files = files;
+          showFile(files[0]);
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
