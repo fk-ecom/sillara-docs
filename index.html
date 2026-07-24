@@ -46,6 +46,11 @@ th{background:var(--surface);font-family:var(--sans);font-weight:500;letter-spac
 hr{border:0;border-top:1px solid var(--hair);margin:34px 0}
 footer{border-top:1px solid var(--hair);margin-top:48px;padding:24px 0 60px;color:var(--muted);font-size:13px}
 @media (max-width:640px){nav.toc ol{columns:1}}
+/* Colour-code preview chip, appended after any hex value in a <code> (like an editor).
+   The light ring keeps even a near-black swatch visible on the dark page; the nowrap
+   wrapper keeps the chip on the same line as its hex code. */
+.hex-wrap{white-space:nowrap}
+.hex-swatch{display:inline-block;width:.9em;height:.9em;border-radius:3px;border:1px solid rgba(244,239,230,.45);margin-inline-start:.4em;vertical-align:-.08em}
 </style>
 </head>
 <body>
@@ -64,5 +69,27 @@ footer{border-top:1px solid var(--hair);margin-top:48px;padding:24px 0 60px;colo
   Sillara — luxury fragrance theme for Shopify. This documentation is the page linked from the theme's documentation URL.
 </footer>
 </div>
+<script>
+// Render a colour chip beside any hex value shown in a <code> tag, the way a code editor
+// previews colours. Runs over the whole page and any hex added later, no dependencies.
+(function () {
+  var HEX = /^#([0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/;
+  document.querySelectorAll('code').forEach(function (code) {
+    var value = code.textContent.trim();
+    if (!HEX.test(value)) return;
+    if (code.parentElement && code.parentElement.classList.contains('hex-wrap')) return;
+    var chip = document.createElement('span');
+    chip.className = 'hex-swatch';
+    chip.style.background = value;
+    chip.setAttribute('aria-hidden', 'true');
+    chip.title = value;
+    var wrap = document.createElement('span');
+    wrap.className = 'hex-wrap';
+    code.replaceWith(wrap);
+    wrap.appendChild(code);
+    wrap.appendChild(chip);
+  });
+})();
+</script>
 </body>
 </html>
