@@ -435,18 +435,9 @@
       </div>
 
       <div class="field">
-        <label for="attachment">Attach a screenshot (optional)</label>
-        <div class="dropzone" id="dropzone">
-          <input type="file" id="attachment" name="attachment" accept="image/*" class="dropzone-input">
-          <span class="dropzone-icon" aria-hidden="true">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 15.5V4M12 4l-4 4M12 4l4 4"/>
-              <path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/>
-            </svg>
-          </span>
-          <p class="dropzone-text" id="dropzoneText">Drag and drop a screenshot, or <span class="browse">browse</span></p>
-          <p class="dropzone-hint">A screenshot of the issue — or the page it's on — speeds up troubleshooting.</p>
-        </div>
+        <label for="screenshot_url">Screenshot link (optional)</label>
+        <input type="url" id="screenshot_url" name="screenshot_url" placeholder="https://… (Imgur, Google Drive, Dropbox)">
+        <p class="hint">A screenshot of the issue — or the page it's on — speeds up troubleshooting. Upload it to an image host or cloud drive and paste the link here.</p>
       </div>
 
       <button type="submit">Send message</button>
@@ -694,51 +685,6 @@
           document.getElementById('formError').style.display = 'block';
         });
     });
-
-    // File dropzone: click-anywhere-to-browse (native, via the input covering the box) +
-    // drag-and-drop, with the filename swapped in once a file is chosen either way.
-    (function () {
-      var dropzone = document.getElementById('dropzone');
-      var input = document.getElementById('attachment');
-      var text = document.getElementById('dropzoneText');
-      var defaultText = text.innerHTML;
-
-      function showFile(file) {
-        if (file) {
-          text.textContent = file.name;
-          dropzone.classList.add('has-file');
-        } else {
-          text.innerHTML = defaultText;
-          dropzone.classList.remove('has-file');
-        }
-      }
-
-      input.addEventListener('change', function () {
-        showFile(input.files && input.files[0]);
-      });
-
-      ['dragenter', 'dragover'].forEach(function (evt) {
-        dropzone.addEventListener(evt, function (e) {
-          e.preventDefault();
-          dropzone.classList.add('is-dragover');
-        });
-      });
-      ['dragleave', 'dragend'].forEach(function (evt) {
-        dropzone.addEventListener(evt, function (e) {
-          e.preventDefault();
-          dropzone.classList.remove('is-dragover');
-        });
-      });
-      dropzone.addEventListener('drop', function (e) {
-        e.preventDefault();
-        dropzone.classList.remove('is-dragover');
-        var files = e.dataTransfer.files;
-        if (files && files.length) {
-          input.files = files;
-          showFile(files[0]);
-        }
-      });
-    })();
   </script>
 </body>
 </html>
